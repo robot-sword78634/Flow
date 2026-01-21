@@ -1,0 +1,109 @@
+print "------------------------------------"
+print "         WELCOME TO FLOW"
+print " <The Friendly Language of Wonder>"
+print "------------------------------------"
+print ""
+print "Hello."
+print "My name is Flow."
+print "I am a small programming language."
+print "But I can do interesting things."
+print ""
+
+let name = input("What is your name? ")
+
+print ""
+print "Nice to meet you, " + name + "."
+print "Let's explore what I can do."
+print ""
+
+# ===============================
+# BASIC MATH DEMO
+# ===============================
+
+print "First, a quick demonstration."
+print "I can do math."
+
+let number = input_num("Give me a number: ")
+
+print ""
+print "Here are some results:"
+
+print "Your number squared is:"
+print pow(number, 2)
+
+print "The square root of your number is:"
+print sqrt(number)
+
+print "The absolute value of your number is:"
+print abs(number)
+
+print ""
+
+# ===============================
+# GUESS THE NUMBER GAME
+# ===============================
+
+print "Would you like to play a game?"
+print "I am thinking of a number between 1 and 10."
+print ""
+
+let secret = random(1, 10)
+let guess = 0
+
+loop while guess != secret ->
+    let guess = input_num("Take a guess: ")
+
+    when guess < secret ->
+        print "Too low."
+    <-
+    when guess > secret ->
+        print "Too high."
+    <-
+<-
+
+print ""
+print "Correct!"
+print "The number was " + secret + "."
+print ""
+
+# ===============================
+# RANDOM WISDOM
+# ===============================
+
+print "Before we finish, I will share some wisdom."
+
+let wisdom = random(1, 4)
+
+when wisdom == 1 ->
+    print "Small programs can still be powerful."
+<-
+when wisdom == 2 ->
+    print "The best way to learn is to experiment."
+<-
+when wisdom == 3 ->
+    print "Games are serious business."
+<-
+when wisdom == 4 ->
+    print "You are only limited by your imagination."
+<-
+
+print ""
+
+# ===============================
+# FUTURE IDEAS
+# ===============================
+
+print "With Flow, you can create:"
+print "- A text adventure game"
+print "- A space simulation"
+print "- A math tutor"
+print "- A fortune teller"
+print "- Your own experiments...you are only limited by your imagination!"
+print ""
+
+print "Thank you for trying Flow, " + name + "."
+print "Good luck, and have fun programming!"
+print ""
+print "--------------------------------"
+print "          END OF DEMO"
+print "--------------------------------"
