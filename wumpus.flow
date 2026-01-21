@@ -1,0 +1,256 @@
+print "================================"
+print "    HUNT THE WUMPUS"
+print "================================"
+print ""
+print "You are in a cave system with 20 rooms."
+print "Each room connects to 3 other rooms."
+print ""
+print "Hazards:"
+print "- Wumpus: Fierce creature that will eat you!"
+print "- Bottomless Pits (2): Fall to your doom!"
+print "- Super Bats (2): Carry you to random rooms!"
+print ""
+print "You have 5 arrows. Good luck!"
+print ""
+
+print "What is your name, brave hunter?"
+let hunter_name = input("")
+print ""
+print "Welcome, " + hunter_name + "!"
+print "May your aim be true."
+print ""
+
+let player_room = 1
+let arrows = 5
+
+let wumpus_room = random(10, 20)
+let pit1_room = random(2, 9)
+let pit2_room = random(11, 18)
+let bat1_room = random(3, 8)
+let bat2_room = random(12, 17)
+
+let game_over = 0
+
+label game_loop
+
+when game_over == 1 ->
+    goto end_game
+<-
+
+print "================================"
+print hunter_name + " is in room"
+print player_room
+print ""
+
+when player_room == wumpus_room ->
+    print "You entered the Wumpus lair!"
+    print "The Wumpus devours " + hunter_name + "!"
+    let game_over = 1
+    goto game_loop
+<-
+
+when player_room == pit1_room ->
+    print "AAAHHH! " + hunter_name + " fell into a bottomless pit!"
+    let game_over = 1
+    goto game_loop
+<-
+
+when player_room == pit2_room ->
+    print "AAAHHH! " + hunter_name + " fell into a bottomless pit!"
+    let game_over = 1
+    goto game_loop
+<-
+
+when player_room == bat1_room ->
+    print "Super bats grab " + hunter_name + "!"
+    let player_room = random(1, 20)
+    print "They drop you in room"
+    print player_room
+    print ""
+    goto game_loop
+<-
+
+when player_room == bat2_room ->
+    print "Super bats grab " + hunter_name + "!"
+    let player_room = random(1, 20)
+    print "They drop you in room"
+    print player_room
+    print ""
+    goto game_loop
+<-
+
+let adj1 = player_room + 1
+let adj2 = player_room + 2
+let adj3 = player_room - 1
+
+when adj1 > 20 ->
+    let adj1 = adj1 - 20
+<-
+when adj2 > 20 ->
+    let adj2 = adj2 - 20
+<-
+when adj3 < 1 ->
+    let adj3 = adj3 + 20
+<-
+
+let warning = 0
+
+when wumpus_room == adj1 ->
+    let warning = 1
+<-
+when wumpus_room == adj2 ->
+    let warning = 1
+<-
+when wumpus_room == adj3 ->
+    let warning = 1
+<-
+
+when warning == 1 ->
+    print hunter_name + " smells something terrible nearby..."
+    let warning = 0
+<-
+
+when pit1_room == adj1 ->
+    let warning = 1
+<-
+when pit1_room == adj2 ->
+    let warning = 1
+<-
+when pit1_room == adj3 ->
+    let warning = 1
+<-
+when pit2_room == adj1 ->
+    let warning = 1
+<-
+when pit2_room == adj2 ->
+    let warning = 1
+<-
+when pit2_room == adj3 ->
+    let warning = 1
+<-
+
+when warning == 1 ->
+    print hunter_name + " feels a cold wind..."
+    let warning = 0
+<-
+
+when bat1_room == adj1 ->
+    let warning = 1
+<-
+when bat1_room == adj2 ->
+    let warning = 1
+<-
+when bat1_room == adj3 ->
+    let warning = 1
+<-
+when bat2_room == adj1 ->
+    let warning = 1
+<-
+when bat2_room == adj2 ->
+    let warning = 1
+<-
+when bat2_room == adj3 ->
+    let warning = 1
+<-
+
+when warning == 1 ->
+    print hunter_name + " hears flapping nearby..."
+    let warning = 0
+<-
+
+print ""
+print "Tunnels lead to rooms:"
+print adj1
+print adj2
+print adj3
+print ""
+print "Arrows remaining:"
+print arrows
+print ""
+print "1 = Move"
+print "2 = Shoot arrow"
+
+let action = input_num("")
+
+when action == 1 ->
+    print "Move to which room?"
+    let new_room = input_num("")
+    
+    let valid = 0
+    when new_room == adj1 ->
+        let valid = 1
+    <-
+    when new_room == adj2 ->
+        let valid = 1
+    <-
+    when new_room == adj3 ->
+        let valid = 1
+    <-
+    
+    when valid == 1 ->
+        let player_room = new_room
+    <- otherwise ->
+        print hunter_name + " can't go there from here!"
+        print ""
+    <-
+    
+    goto game_loop
+<-
+
+when action == 2 ->
+    when arrows < 1 ->
+        print "Out of arrows!"
+        print ""
+        goto game_loop
+    <-
+    
+    print "Shoot into which room?"
+    let target_room = input_num("")
+    let arrows = arrows - 1
+    
+    print hunter_name + " shoots an arrow..."
+    print ""
+    
+    when target_room == wumpus_room ->
+        print "You hear a mighty roar!"
+        print hunter_name + "'s arrow struck the Wumpus!"
+        print ""
+        print "================================"
+        print "    " + hunter_name + " WINS!"
+        print "================================"
+        print "You defeated the fearsome Wumpus!"
+        let game_over = 1
+        goto game_loop
+    <- otherwise ->
+        print "Your arrow clatters in the distance..."
+        print hunter_name + " missed!"
+        print ""
+        
+        let wumpus_moves = random(1, 4)
+        when wumpus_moves == 1 ->
+            let wumpus_room = wumpus_room + 1
+            when wumpus_room > 20 ->
+                let wumpus_room = wumpus_room - 20
+            <-
+            print hunter_name + " hears something moving..."
+            print ""
+        <-
+        
+        when arrows < 1 ->
+            print "That was your last arrow!"
+            print hunter_name + " wanders the caves forever..."
+            let game_over = 1
+        <-
+        
+        goto game_loop
+    <-
+<-
+
+print "Invalid choice!"
+goto game_loop
+
+label end_game
+print ""
+print "Game Over!"
+print ""
+print "Thanks for playing, " + hunter_name + "!"
