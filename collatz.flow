@@ -1,0 +1,23 @@
+ print "=== COLLATZ CONJECTURE ==="
+ print "Enter a starting number:"
+ let n = input_num("")
+ 
+ let steps = 0
+ 
+ loop while n > 1 ->
+     print n
+     
+     let remainder = n % 2
+     when remainder == 0 ->
+         let n = n / 2
+     <- otherwise ->
+         let n = (3 * n) + 1
+     <-
+     
+     let steps = steps + 1
+ <-
+ 
+ print n
+ print ""
+ print "Reached 1 in steps:"
+ print steps
