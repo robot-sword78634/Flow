@@ -1,0 +1,30 @@
+ print "Enter a number to check if prime:"
+ let num = input_num("")
+ 
+ when num < 2 ->
+     print "Not prime"
+     goto end
+ <-
+ 
+ let divisor = 2
+ let is_prime = 1
+ 
+ loop while divisor < num ->
+     let remainder = num % divisor
+     
+     when remainder == 0 ->
+         let is_prime = 0
+         goto done_checking
+     <-
+     
+     let divisor = divisor + 1
+ <-
+ 
+ label done_checking
+ when is_prime == 1 ->
+     print "PRIME!"
+ <- otherwise ->
+     print "Not prime"
+ <-
+ 
+ label end
