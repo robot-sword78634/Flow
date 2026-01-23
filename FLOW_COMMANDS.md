@@ -53,6 +53,26 @@ print "Your score: " + score
 - Always adds a newline after output
 - Can print strings, numbers, or variables
 
+### `write`
+**Description:** Outputs multiple vales to the same line.
+
+**Syntax:**
+```flow
+write value
+```
+
+**Examples:**
+```flow
+write "Hello"
+write "World!"
+Outpit:
+HelloWorld!"
+```
+
+**Notes:**
+- Does NOT add a newline after output. Use: print"" to after write for new line.
+- Can print strings, numbers, or variables
+
 ### `input()`
 **Description:** Gets text input from the user. Returns a string.
 
