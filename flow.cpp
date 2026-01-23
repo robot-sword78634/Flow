@@ -15,7 +15,7 @@ using namespace std;
 
 // Token types
 enum TokenType {
-    TOK_EOF, TOK_LET, TOK_PRINT, TOK_INPUT, TOK_INPUT_NUM, TOK_WHEN, TOK_OTHERWISE,
+    TOK_EOF, TOK_LET, TOK_PRINT, TOK_WRITE, TOK_INPUT, TOK_INPUT_NUM, TOK_WHEN, TOK_OTHERWISE,
     TOK_REPEAT, TOK_TIMES, TOK_LOOP, TOK_WHILE, TOK_FROM, TOK_TO,
     TOK_LABEL, TOK_GOTO, TOK_RANDOM, TOK_SQRT, TOK_POW, TOK_ABS, TOK_FLOOR, TOK_CEIL,
     TOK_CALL, TOK_DEFINE,
@@ -184,6 +184,7 @@ private:
         // Check for keywords
         if (value == "let") return {TOK_LET, value, line};
         if (value == "print") return {TOK_PRINT, value, line};
+        if (value == "write") return {TOK_WRITE, value, line};
         if (value == "input") return {TOK_INPUT, value, line};
         if (value == "input_num") return {TOK_INPUT_NUM, value, line};
         if (value == "when") return {TOK_WHEN, value, line};
@@ -211,7 +212,7 @@ private:
 
 // AST Node types
 enum NodeType {
-    NODE_PROGRAM, NODE_LET, NODE_PRINT, NODE_INPUT, NODE_INPUT_NUM, NODE_WHEN, NODE_REPEAT,
+    NODE_PROGRAM, NODE_LET, NODE_PRINT, NODE_WRITE, NODE_INPUT, NODE_INPUT_NUM, NODE_WHEN, NODE_REPEAT,
     NODE_LOOP_WHILE, NODE_LOOP_FOR, NODE_LABEL, NODE_GOTO, NODE_BLOCK,
     NODE_BINOP, NODE_UNARY, NODE_NUMBER, NODE_STRING, NODE_IDENT, NODE_CALL
 };
@@ -254,6 +255,7 @@ private:
 
         if (current().type == TOK_LET) return parseLet();
         if (current().type == TOK_PRINT) return parsePrint();
+        if (current().type == TOK_WRITE) return parseWrite();
         if (current().type == TOK_WHEN) return parseWhen();
         if (current().type == TOK_REPEAT) return parseRepeat();
         if (current().type == TOK_LOOP) return parseLoop();
@@ -288,6 +290,16 @@ private:
         auto node = make_shared<ASTNode>();
         node->type = NODE_PRINT;
         advance(); // skip 'print'
+
+        node->children.push_back(parseExpression());
+        skipNewlines();
+        return node;
+    }
+
+    shared_ptr<ASTNode> parseWrite() {
+        auto node = make_shared<ASTNode>();
+        node->type = NODE_WRITE;
+        advance(); // skip 'write'
 
         node->children.push_back(parseExpression());
         skipNewlines();
@@ -744,6 +756,14 @@ private:
                 cout << val.str_value << endl;
             } else {
                 cout << val.num_value << endl;
+            }
+        }
+        else if (node->type == NODE_WRITE) {
+            Value val = evalValue(node->children[0]);
+            if (val.is_string) {
+                cout << val.str_value;
+            } else {
+                cout << val.num_value;
             }
         }
         else if (node->type == NODE_WHEN) {
