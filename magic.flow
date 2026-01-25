@@ -1,0 +1,82 @@
+print "Will fortune smile upon you?"
+print "Will luck turn her fickle gaze?"
+print "Is today the day your questions will be answered?"
+print "Step right up, friends! The future awaits!"
+print "But remember: the Magic 8 Ball ONLY speaks the truth..."
+print "Whether you're ready to hear it or not!"
+label start
+let ask = input("What is your question? ")
+let result = random(1, 20)
+
+#print result
+
+when result == 1 ->
+	print "It is certain."
+<-
+when result == 2 ->
+        print "It is decidedly so." 
+<-
+when result == 3 ->
+        print "Without a doubt." 
+<-
+when result == 4 ->
+        print "Yes, definitely.." 
+<-
+when result == 5 ->
+        print "You may rely on it." 
+<-
+when result == 6 ->
+        print "As I see it, yes." 
+<-
+when result == 7 ->
+        print "Most likely." 
+<-
+when result == 8 ->
+        print "Outlook good." 
+<-
+when result == 9 ->
+        print "Yes." 
+<-
+when result == 10 ->
+        print "Signs point to yes." 
+<-
+when result == 11 ->
+        print "Reply hazy, try again." 
+<-
+when result == 12 ->
+        print "Ask again later." 
+<-
+when result == 13 ->
+        print "Better not tell you now." 
+<-
+when result == 14 ->
+        print "Cannot predict now." 
+<-
+when result == 15 ->
+        print "Concentrate and ask again." 
+<-
+when result == 16 ->
+        print "Don't count on it." 
+<-
+when result == 17 ->
+        print "My reply is no." 
+<-
+when result == 18 ->
+        print "My sources say no." 
+<-
+when result == 19 ->
+        print "Outlook not so good." 
+<-
+when result == 20 ->
+        print "Very doubtful." 
+<-
+
+let again = input("Dare you tempt fate again? (Y/N)? ")
+when again == "Y" -> 
+	goto start
+<-
+when again == "y" ->
+	goto start
+<-
+
+print "Fare thee well!"
