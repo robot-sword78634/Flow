@@ -1,5 +1,6 @@
+# Port of the classic UNIX game, Hunt the Wumpus to Flow
 print "================================"
-print "    HUNT THE WUMPUS"
+print "        HUNT THE WUMPUS"
 print "================================"
 print ""
 print "You are in a cave system with 20 rooms."
