@@ -32,6 +32,19 @@ let greeting = "Hello, " + name
 
 ## Input/Output
 
+### `clear`
+**Description:** Clears the terminal screen.
+
+**Syntax:**
+```flow
+clear
+```
+
+**Examples:**
+```flow
+clear
+print "Hello, world!"
+```
 ### `print`
 **Description:** Outputs a value to the screen, followed by a newline.
 
