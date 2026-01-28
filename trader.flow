@@ -1,0 +1,806 @@
+clear
+print "================================"
+print "          SPACE TRADER"
+print "      Galactic Commerce Sim"
+print "================================"
+print ""
+print "You are a space merchant with a small"
+print "cargo ship. Buy low, sell high, and"
+print "become the richest trader in the galaxy!"
+print ""
+print "What is your name, Captain?"
+let captain_name = input("")
+
+clear
+print "Welcome, Captain " + captain_name + "!"
+print ""
+print "You start with:"
+print "- 1000 credits"
+print "- 20 cargo hold capacity"
+print "- Ship docked at Earth"
+print ""
+print "Press Enter to begin..."
+let dummy = input("")
+
+# Game state
+let credits = 1000
+let cargo_capacity = 20
+let current_cargo = 0
+let days = 1
+let current_planet = 1  # 1=Earth, 2=Mars, 3=Jupiter, 4=Titan, 5=Proxima
+
+# Cargo inventory
+let food_qty = 0
+let ore_qty = 0
+let fuel_qty = 0
+let tech_qty = 0
+let luxuries_qty = 0
+
+# Ship upgrades
+let ship_level = 1
+let fuel_efficiency = 1
+
+# Main game loop
+label main_menu
+
+clear
+print "================================"
+print "    DAY " + days
+print "================================"
+print "Captain: " + captain_name
+print "Credits: " + credits
+print "Location: "
+
+when current_planet == 1 ->
+    print "Earth (Sol System)"
+<-
+when current_planet == 2 ->
+    print "Mars (Sol System)"
+<-
+when current_planet == 3 ->
+    print "Jupiter Station"
+<-
+when current_planet == 4 ->
+    print "Titan Colony"
+<-
+when current_planet == 5 ->
+    print "Proxima Centauri"
+<-
+
+print ""
+print "Cargo: " + current_cargo + "/" + cargo_capacity
+print "Ship Level: " + ship_level
+print ""
+print "1 = Trade Goods"
+print "2 = Travel to Another Planet"
+print "3 = Upgrade Ship"
+print "4 = View Cargo"
+print "5 = Check News"
+print "6 = End Day"
+print "7 = Quit Game"
+print ""
+
+let choice = input_num("")
+
+when choice == 1 ->
+    goto trade_menu
+<-
+when choice == 2 ->
+    goto travel_menu
+<-
+when choice == 3 ->
+    goto upgrade_menu
+<-
+when choice == 4 ->
+    goto view_cargo
+<-
+when choice == 5 ->
+    goto news
+<-
+when choice == 6 ->
+    let days = days + 1
+    goto main_menu
+<-
+when choice == 7 ->
+    goto game_end
+<-
+
+print "Invalid choice!"
+goto main_menu
+
+# ===================================
+# TRADE MENU
+# ===================================
+label trade_menu
+
+clear
+print "=== COMMODITY MARKET ==="
+print ""
+
+# Generate prices based on planet and random variation
+let food_price = 10
+let ore_price = 15
+let fuel_price = 8
+let tech_price = 50
+let luxuries_price = 30
+
+# Planet-specific price modifiers
+when current_planet == 1 ->
+    # Earth - Food cheap, Tech expensive
+    let food_price = 8
+    let tech_price = 60
+    let luxuries_price = 25
+<-
+
+when current_planet == 2 ->
+    # Mars - Ore cheap, Food expensive
+    let ore_price = 10
+    let food_price = 15
+    let fuel_price = 12
+<-
+
+when current_planet == 3 ->
+    # Jupiter - Fuel cheap, everything else expensive
+    let fuel_price = 5
+    let food_price = 18
+    let ore_price = 20
+<-
+
+when current_planet == 4 ->
+    # Titan - Luxuries cheap, Tech expensive
+    let luxuries_price = 20
+    let tech_price = 70
+    let food_price = 12
+<-
+
+when current_planet == 5 ->
+    # Proxima - Tech cheap, Luxuries expensive
+    let tech_price = 35
+    let luxuries_price = 50
+    let ore_price = 25
+<-
+
+# Add random market fluctuation
+let market_var = random(-3, 3)
+let food_price = food_price + market_var
+let market_var = random(-3, 3)
+let ore_price = ore_price + market_var
+let market_var = random(-2, 2)
+let fuel_price = fuel_price + market_var
+let market_var = random(-5, 5)
+let tech_price = tech_price + market_var
+let market_var = random(-4, 4)
+let luxuries_price = luxuries_price + market_var
+
+# Prevent negative prices
+when food_price < 1 ->
+    let food_price = 1
+<-
+when ore_price < 1 ->
+    let ore_price = 1
+<-
+when fuel_price < 1 ->
+    let fuel_price = 1
+<-
+when tech_price < 1 ->
+    let tech_price = 1
+<-
+when luxuries_price < 1 ->
+    let luxuries_price = 1
+<-
+
+print "Your Credits: " + credits
+print "Cargo Space: " + current_cargo + "/" + cargo_capacity
+print ""
+print "COMMODITY      PRICE   YOU HAVE"
+print "1. Food        " + food_price + "       " + food_qty
+print "2. Ore         " + ore_price + "       " + ore_qty
+print "3. Fuel        " + fuel_price + "       " + fuel_qty
+print "4. Technology  " + tech_price + "      " + tech_qty
+print "5. Luxuries    " + luxuries_price + "      " + luxuries_qty
+print ""
+print "6 = Buy"
+print "7 = Sell"
+print "8 = Back to Main Menu"
+print ""
+
+let trade_choice = input_num("")
+
+when trade_choice == 6 ->
+    goto buy_menu
+<-
+when trade_choice == 7 ->
+    goto sell_menu
+<-
+when trade_choice == 8 ->
+    goto main_menu
+<-
+
+goto trade_menu
+
+# ===================================
+# BUY MENU
+# ===================================
+label buy_menu
+
+print ""
+print "=== BUY GOODS ==="
+print "What do you want to buy?"
+print "1=Food 2=Ore 3=Fuel 4=Tech 5=Luxuries 6=Cancel"
+let buy_choice = input_num("")
+
+when buy_choice == 6 ->
+    goto trade_menu
+<-
+
+print "How many units?"
+let buy_qty = input_num("")
+
+# Calculate cost and check if affordable
+let total_cost = 0
+let item_price = 0
+let item_name = ""
+
+when buy_choice == 1 ->
+    let total_cost = buy_qty * food_price
+    let item_price = food_price
+    let item_name = "Food"
+<-
+when buy_choice == 2 ->
+    let total_cost = buy_qty * ore_price
+    let item_price = ore_price
+    let item_name = "Ore"
+<-
+when buy_choice == 3 ->
+    let total_cost = buy_qty * fuel_price
+    let item_price = fuel_price
+    let item_name = "Fuel"
+<-
+when buy_choice == 4 ->
+    let total_cost = buy_qty * tech_price
+    let item_price = tech_price
+    let item_name = "Technology"
+<-
+when buy_choice == 5 ->
+    let total_cost = buy_qty * luxuries_price
+    let item_price = luxuries_price
+    let item_name = "Luxuries"
+<-
+
+# Check if can afford and have cargo space
+let new_cargo = current_cargo + buy_qty
+
+when total_cost > credits ->
+    print "Not enough credits!"
+    print "Press Enter..."
+    let dummy = input("")
+    goto trade_menu
+<-
+
+when new_cargo > cargo_capacity ->
+    print "Not enough cargo space!"
+    print "Press Enter..."
+    let dummy = input("")
+    goto trade_menu
+<-
+
+# Execute purchase
+let credits = credits - total_cost
+let current_cargo = current_cargo + buy_qty
+
+when buy_choice == 1 ->
+    let food_qty = food_qty + buy_qty
+<-
+when buy_choice == 2 ->
+    let ore_qty = ore_qty + buy_qty
+<-
+when buy_choice == 3 ->
+    let fuel_qty = fuel_qty + buy_qty
+<-
+when buy_choice == 4 ->
+    let tech_qty = tech_qty + buy_qty
+<-
+when buy_choice == 5 ->
+    let luxuries_qty = luxuries_qty + buy_qty
+<-
+
+print ""
+print "Purchased " + buy_qty + " units of " + item_name
+print "Cost: " + total_cost + " credits"
+print "Remaining credits: " + credits
+print ""
+print "Press Enter..."
+let dummy = input("")
+
+goto trade_menu
+
+# ===================================
+# SELL MENU
+# ===================================
+label sell_menu
+
+print ""
+print "=== SELL GOODS ==="
+print "What do you want to sell?"
+print "1=Food 2=Ore 3=Fuel 4=Tech 5=Luxuries 6=Cancel"
+let sell_choice = input_num("")
+
+when sell_choice == 6 ->
+    goto trade_menu
+<-
+
+print "How many units?"
+let sell_qty = input_num("")
+
+# Check if have enough to sell
+let have_qty = 0
+
+when sell_choice == 1 ->
+    let have_qty = food_qty
+<-
+when sell_choice == 2 ->
+    let have_qty = ore_qty
+<-
+when sell_choice == 3 ->
+    let have_qty = fuel_qty
+<-
+when sell_choice == 4 ->
+    let have_qty = tech_qty
+<-
+when sell_choice == 5 ->
+    let have_qty = luxuries_qty
+<-
+
+when sell_qty > have_qty ->
+    print "You don't have that many!"
+    print "Press Enter..."
+    let dummy = input("")
+    goto trade_menu
+<-
+
+# Calculate earnings
+let total_earn = 0
+let item_name = ""
+
+when sell_choice == 1 ->
+    let total_earn = sell_qty * food_price
+    let food_qty = food_qty - sell_qty
+    let item_name = "Food"
+<-
+when sell_choice == 2 ->
+    let total_earn = sell_qty * ore_price
+    let ore_qty = ore_qty - sell_qty
+    let item_name = "Ore"
+<-
+when sell_choice == 3 ->
+    let total_earn = sell_qty * fuel_price
+    let fuel_qty = fuel_qty - sell_qty
+    let item_name = "Fuel"
+<-
+when sell_choice == 4 ->
+    let total_earn = sell_qty * tech_price
+    let tech_qty = tech_qty - sell_qty
+    let item_name = "Technology"
+<-
+when sell_choice == 5 ->
+    let total_earn = sell_qty * luxuries_price
+    let luxuries_qty = luxuries_qty - sell_qty
+    let item_name = "Luxuries"
+<-
+
+let credits = credits + total_earn
+let current_cargo = current_cargo - sell_qty
+
+print ""
+print "Sold " + sell_qty + " units of " + item_name
+print "Earned: " + total_earn + " credits"
+print "Total credits: " + credits
+print ""
+print "Press Enter..."
+let dummy = input("")
+
+goto trade_menu
+
+# ===================================
+# TRAVEL MENU
+# ===================================
+label travel_menu
+
+clear
+print "=== NAVIGATION ==="
+print ""
+print "Current Location: "
+
+when current_planet == 1 ->
+    print "Earth"
+<-
+when current_planet == 2 ->
+    print "Mars"
+<-
+when current_planet == 3 ->
+    print "Jupiter Station"
+<-
+when current_planet == 4 ->
+    print "Titan Colony"
+<-
+when current_planet == 5 ->
+    print "Proxima Centauri"
+<-
+
+print ""
+print "Destinations:"
+print "1 = Earth (Sol System)"
+print "2 = Mars (Sol System)"
+print "3 = Jupiter Station"
+print "4 = Titan Colony"
+print "5 = Proxima Centauri (Distant!)"
+print "6 = Cancel"
+print ""
+
+let dest = input_num("")
+
+when dest == 6 ->
+    goto main_menu
+<-
+
+when dest == current_planet ->
+    print "You're already there!"
+    print "Press Enter..."
+    let dummy = input("")
+    goto travel_menu
+<-
+
+# Calculate fuel cost based on distance
+let fuel_cost = 0
+let travel_days = 0
+
+when current_planet == 1 ->
+    when dest == 2 ->
+        let fuel_cost = 10
+        let travel_days = 1
+    <-
+    when dest == 3 ->
+        let fuel_cost = 25
+        let travel_days = 2
+    <-
+    when dest == 4 ->
+        let fuel_cost = 30
+        let travel_days = 3
+    <-
+    when dest == 5 ->
+        let fuel_cost = 100
+        let travel_days = 10
+    <-
+<-
+
+when current_planet == 2 ->
+    when dest == 1 ->
+        let fuel_cost = 10
+        let travel_days = 1
+    <-
+    when dest == 3 ->
+        let fuel_cost = 20
+        let travel_days = 2
+    <-
+    when dest == 4 ->
+        let fuel_cost = 25
+        let travel_days = 2
+    <-
+    when dest == 5 ->
+        let fuel_cost = 95
+        let travel_days = 10
+    <-
+<-
+
+when current_planet == 3 ->
+    when dest == 1 ->
+        let fuel_cost = 25
+        let travel_days = 2
+    <-
+    when dest == 2 ->
+        let fuel_cost = 20
+        let travel_days = 2
+    <-
+    when dest == 4 ->
+        let fuel_cost = 15
+        let travel_days = 1
+    <-
+    when dest == 5 ->
+        let fuel_cost = 80
+        let travel_days = 8
+    <-
+<-
+
+when current_planet == 4 ->
+    when dest == 1 ->
+        let fuel_cost = 30
+        let travel_days = 3
+    <-
+    when dest == 2 ->
+        let fuel_cost = 25
+        let travel_days = 2
+    <-
+    when dest == 3 ->
+        let fuel_cost = 15
+        let travel_days = 1
+    <-
+    when dest == 5 ->
+        let fuel_cost = 75
+        let travel_days = 7
+    <-
+<-
+
+when current_planet == 5 ->
+    when dest == 1 ->
+        let fuel_cost = 100
+        let travel_days = 10
+    <-
+    when dest == 2 ->
+        let fuel_cost = 95
+        let travel_days = 10
+    <-
+    when dest == 3 ->
+        let fuel_cost = 80
+        let travel_days = 8
+    <-
+    when dest == 4 ->
+        let fuel_cost = 75
+        let travel_days = 7
+    <-
+<-
+
+# Apply fuel efficiency upgrade
+let fuel_cost = fuel_cost / fuel_efficiency
+
+print ""
+print "Fuel required: " + fuel_cost + " credits"
+print "Travel time: " + travel_days + " days"
+print ""
+print "Proceed? (1=Yes, 2=No)"
+let proceed = input_num("")
+
+when proceed != 1 ->
+    goto travel_menu
+<-
+
+when credits < fuel_cost ->
+    print "Not enough credits for fuel!"
+    print "Press Enter..."
+    let dummy = input("")
+    goto travel_menu
+<-
+
+# Execute travel
+let credits = credits - fuel_cost
+let current_planet = dest
+let days = days + travel_days
+
+# Random event during travel
+let event_roll = random(1, 10)
+
+when event_roll == 1 ->
+    print ""
+    print "*** PIRATE ATTACK! ***"
+    print "Pirates board your ship!"
+    let stolen = random(1, 5)
+    when food_qty >= stolen ->
+        let food_qty = food_qty - stolen
+        print "They stole " + stolen + " units of Food!"
+    <-
+    print "Press Enter..."
+    let dummy = input("")
+<-
+
+when event_roll == 2 ->
+    print ""
+    print "*** ASTEROID FIELD! ***"
+    print "Navigating costs extra fuel..."
+    let extra_fuel = random(10, 30)
+    let credits = credits - extra_fuel
+    print "Lost " + extra_fuel + " credits in fuel"
+    print "Press Enter..."
+    let dummy = input("")
+<-
+
+when event_roll == 3 ->
+    print ""
+    print "*** DISTRESS SIGNAL! ***"
+    print "You rescue stranded miners!"
+    let reward = random(50, 150)
+    let credits = credits + reward
+    print "Reward: " + reward + " credits!"
+    print "Press Enter..."
+    let dummy = input("")
+<-
+
+print ""
+print "Journey complete!"
+print "Press Enter..."
+let dummy = input("")
+
+goto main_menu
+
+# ===================================
+# UPGRADE MENU
+# ===================================
+label upgrade_menu
+
+clear
+print "=== SHIP UPGRADES ==="
+print ""
+print "Your Credits: " + credits
+print "Current Ship Level: " + ship_level
+print "Current Cargo Capacity: " + cargo_capacity
+print ""
+print "Available Upgrades:"
+print ""
+print "1 = Expand Cargo Hold (+10 capacity)"
+print "   Cost: 500 credits"
+print ""
+print "2 = Upgrade Engines (Better fuel efficiency)"
+print "   Cost: 800 credits"
+print ""
+print "3 = Back to Main Menu"
+print ""
+
+let upgrade_choice = input_num("")
+
+when upgrade_choice == 1 ->
+    when credits >= 500 ->
+        let credits = credits - 500
+        let cargo_capacity = cargo_capacity + 10
+        print ""
+        print "Cargo hold expanded!"
+        print "New capacity: " + cargo_capacity
+        print "Press Enter..."
+        let dummy = input("")
+    <- otherwise ->
+        print "Not enough credits!"
+        print "Press Enter..."
+        let dummy = input("")
+    <-
+    goto upgrade_menu
+<-
+
+when upgrade_choice == 2 ->
+    when credits >= 800 ->
+        let credits = credits - 800
+        let fuel_efficiency = fuel_efficiency + 1
+        let ship_level = ship_level + 1
+        print ""
+        print "Engines upgraded!"
+        print "Fuel costs reduced!"
+        print "Press Enter..."
+        let dummy = input("")
+    <- otherwise ->
+        print "Not enough credits!"
+        print "Press Enter..."
+        let dummy = input("")
+    <-
+    goto upgrade_menu
+<-
+
+when upgrade_choice == 3 ->
+    goto main_menu
+<-
+
+goto upgrade_menu
+
+# ===================================
+# VIEW CARGO
+# ===================================
+label view_cargo
+
+clear
+print "=== CARGO MANIFEST ==="
+print ""
+print "Cargo Hold: " + current_cargo + "/" + cargo_capacity
+print ""
+print "COMMODITY      QUANTITY"
+print "Food           " + food_qty
+print "Ore            " + ore_qty
+print "Fuel           " + fuel_qty
+print "Technology     " + tech_qty
+print "Luxuries       " + luxuries_qty
+print ""
+print "Press Enter to continue..."
+let dummy = input("")
+
+goto main_menu
+
+# ===================================
+# NEWS
+# ===================================
+label news
+
+clear
+print "=== GALACTIC NEWS NETWORK ==="
+print ""
+
+let news_roll = random(1, 8)
+
+when news_roll == 1 ->
+    print "Food shortage on Mars drives prices up!"
+<-
+when news_roll == 2 ->
+    print "New ore deposits found on Jupiter!"
+<-
+when news_roll == 3 ->
+    print "Luxury goods in high demand at Proxima!"
+<-
+when news_roll == 4 ->
+    print "Tech boom on Earth creates opportunities!"
+<-
+when news_roll == 5 ->
+    print "Pirate activity increasing in outer systems!"
+<-
+when news_roll == 6 ->
+    print "Fuel prices stable across all markets."
+<-
+when news_roll == 7 ->
+    print "Trade routes to Titan remain profitable."
+<-
+when news_roll == 8 ->
+    print "Peaceful day in the galaxy. Trade wisely!"
+<-
+
+print ""
+print "Press Enter..."
+let dummy = input("")
+
+goto main_menu
+
+# ===================================
+# GAME END
+# ===================================
+label game_end
+
+clear
+print "================================"
+print "    FINAL SCORE"
+print "================================"
+print ""
+print "Captain: " + captain_name
+print "Days Survived: " + days
+print "Final Credits: " + credits
+print ""
+
+# Calculate net worth (credits + cargo value)
+let cargo_value = 0
+let cargo_value = cargo_value + (food_qty * 10)
+let cargo_value = cargo_value + (ore_qty * 15)
+let cargo_value = cargo_value + (fuel_qty * 8)
+let cargo_value = cargo_value + (tech_qty * 50)
+let cargo_value = cargo_value + (luxuries_qty * 30)
+
+let net_worth = credits + cargo_value
+
+print "Cargo Value: " + cargo_value
+print "Total Net Worth: " + net_worth
+print ""
+
+when net_worth < 1000 ->
+    print "Rank: Struggling Merchant"
+<-
+when net_worth >= 1000 ->
+    when net_worth < 5000 ->
+        print "Rank: Small-Time Trader"
+    <-
+<-
+when net_worth >= 5000 ->
+    when net_worth < 10000 ->
+        print "Rank: Successful Captain"
+    <-
+<-
+when net_worth >= 10000 ->
+    when net_worth < 25000 ->
+        print "Rank: Master Trader"
+    <-
+<-
+when net_worth >= 25000 ->
+    print "Rank: LEGENDARY MERCHANT!"
+<-
+
+print ""
+print "Thanks for playing, Captain!"
+print "================================"
